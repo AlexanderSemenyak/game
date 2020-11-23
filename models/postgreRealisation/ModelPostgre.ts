@@ -1,4 +1,4 @@
-import { IModelUser } from "../IModelUser";
+п»їimport { IModelUser } from "../IModelUser";
 import { IModelBase } from "../IModelBase";
 import * as utilities from "../Utilities"
 import { User, UserRestricted, UserIds } from "../dto/User";
@@ -7,7 +7,7 @@ import * as MiddlewarePostgres from "../providers/MiddlewarePostgres";
 
 class ModelBasePostgre implements IModelBase {
     /**
-    * Новый идентификатор любой записи в базе данных
+    * РќРѕРІС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ Р»СЋР±РѕР№ Р·Р°РїРёСЃРё РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
     */
     static getNewId(): string {
         var newId = utilities.Guid.newGuid();
@@ -17,13 +17,13 @@ class ModelBasePostgre implements IModelBase {
 
 
 /**
- * Модель пользователя (реализация PostgreSQL)
+ * РњРѕРґРµР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ (СЂРµР°Р»РёР·Р°С†РёСЏ PostgreSQL)
  */
 
 export class ModelUserPostgre extends ModelBasePostgre implements IModelUser {
     getAllUsersRestricted(disableCache: boolean): Promise<UserRestricted[]> {
         return new Promise<UserRestricted[]>((resolve, reject) => {
-            var sql = "select key, nickname, role, fio from users";//ВОТ тут запрашиваем урезанный набор данных по пользователям
+            var sql = "select key, nickname, role, fio from users";//Р’РћРў С‚СѓС‚ Р·Р°РїСЂР°С€РёРІР°РµРј СѓСЂРµР·Р°РЅРЅС‹Р№ РЅР°Р±РѕСЂ РґР°РЅРЅС‹С… РїРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј
             if (disableCache) {
                 MiddlewarePostgres.queryWithoutCache(sql,
                     null,
@@ -31,18 +31,18 @@ export class ModelUserPostgre extends ModelBasePostgre implements IModelUser {
                         if (err || !data) {
                             reject(err);
                         } else {
-                            //создаем коллекцию User из результата - пока тестовая реализация заполнения нескольких полей из any
+                            //СЃРѕР·РґР°РµРј РєРѕР»Р»РµРєС†РёСЋ User РёР· СЂРµР·СѓР»СЊС‚Р°С‚Р° - РїРѕРєР° С‚РµСЃС‚РѕРІР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РЅРµСЃРєРѕР»СЊРєРёС… РїРѕР»РµР№ РёР· any
                             var usersDto: UserRestricted[] = ModelUserPostgre.arrayToUserRestricted(data);
                             resolve(usersDto);
                         }
                     });
             } else {
-                MiddlewarePostgres.queryWithCache(sql, null, 1*60/*кэш на одну минуту ТУТ нужно передавать параметром*/,
+                MiddlewarePostgres.queryWithCache(sql, null, 1*60/*РєСЌС€ РЅР° РѕРґРЅСѓ РјРёРЅСѓС‚Сѓ РўРЈРў РЅСѓР¶РЅРѕ РїРµСЂРµРґР°РІР°С‚СЊ РїР°СЂР°РјРµС‚СЂРѕРј*/,
                     (err, data) => {
                         if (err || !data) {
                             reject(err);
                         } else {
-                            //создаем коллекцию User из результата - пока тестовая реализация заполнения нескольких полей из any
+                            //СЃРѕР·РґР°РµРј РєРѕР»Р»РµРєС†РёСЋ User РёР· СЂРµР·СѓР»СЊС‚Р°С‚Р° - РїРѕРєР° С‚РµСЃС‚РѕРІР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РЅРµСЃРєРѕР»СЊРєРёС… РїРѕР»РµР№ РёР· any
                             var usersDto: UserRestricted[] = ModelUserPostgre.arrayToUserRestricted(data);
                             resolve(usersDto);
                         }
@@ -52,7 +52,7 @@ export class ModelUserPostgre extends ModelBasePostgre implements IModelUser {
     }
 
     /**
-     * Получить по пользователю его учетки (но лучше по key Пользователя)
+     * РџРѕР»СѓС‡РёС‚СЊ РїРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ РµРіРѕ СѓС‡РµС‚РєРё (РЅРѕ Р»СѓС‡С€Рµ РїРѕ key РџРѕР»СЊР·РѕРІР°С‚РµР»СЏ)
      * @param user
      * @param disableCache
      */
@@ -65,18 +65,18 @@ export class ModelUserPostgre extends ModelBasePostgre implements IModelUser {
                         if (err || !data) {
                             reject(err);
                         } else {
-                            //создаем коллекцию учеток пользователя из результата 
+                            //СЃРѕР·РґР°РµРј РєРѕР»Р»РµРєС†РёСЋ СѓС‡РµС‚РѕРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР· СЂРµР·СѓР»СЊС‚Р°С‚Р° 
                             var userIds: UserIds = new UserIds(data);
                             resolve(userIds);
                         }
                     });
             } else {
-                MiddlewarePostgres.queryWithCache(sql, [keyUser], 1*60/*кэш на одну минуту ТУТ нужно передавать параметром*/,
+                MiddlewarePostgres.queryWithCache(sql, [keyUser], 1*60/*РєСЌС€ РЅР° РѕРґРЅСѓ РјРёРЅСѓС‚Сѓ РўРЈРў РЅСѓР¶РЅРѕ РїРµСЂРµРґР°РІР°С‚СЊ РїР°СЂР°РјРµС‚СЂРѕРј*/,
                     (err, data) => {
                         if (err || !data) {
                             reject(err);
                         } else {
-                            //создаем коллекцию учеток пользователя из результата 
+                            //СЃРѕР·РґР°РµРј РєРѕР»Р»РµРєС†РёСЋ СѓС‡РµС‚РѕРє РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РёР· СЂРµР·СѓР»СЊС‚Р°С‚Р° 
                             var userIds: UserIds = new UserIds(data);
                             resolve(userIds);
                         }
@@ -86,8 +86,8 @@ export class ModelUserPostgre extends ModelBasePostgre implements IModelUser {
     }
 
     /**
-     * Получить всех пользователей
-     * @param disableCache - true -не использовать кэш, только через базу получать данные
+     * РџРѕР»СѓС‡РёС‚СЊ РІСЃРµС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
+     * @param disableCache - true -РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РєСЌС€, С‚РѕР»СЊРєРѕ С‡РµСЂРµР· Р±Р°Р·Сѓ РїРѕР»СѓС‡Р°С‚СЊ РґР°РЅРЅС‹Рµ
      */
     getAllUsers(disableCache : boolean): Promise<User[]> {
 
@@ -99,18 +99,18 @@ export class ModelUserPostgre extends ModelBasePostgre implements IModelUser {
                         if (err || !data) {
                             reject(err);
                         } else {
-                            //создаем коллекцию User из результата - пока тестовая реализация заполнения нескольких полей из any
+                            //СЃРѕР·РґР°РµРј РєРѕР»Р»РµРєС†РёСЋ User РёР· СЂРµР·СѓР»СЊС‚Р°С‚Р° - РїРѕРєР° С‚РµСЃС‚РѕРІР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РЅРµСЃРєРѕР»СЊРєРёС… РїРѕР»РµР№ РёР· any
                             var usersDto: User[] = ModelUserPostgre.arrayToUser(data);
                             resolve(usersDto);
                         }
                     });
             } else {
-                MiddlewarePostgres.queryWithCache(sql, null, 1*60/*кэш на одну минуту ТУТ нужно передавать параметром*/,
+                MiddlewarePostgres.queryWithCache(sql, null, 1*60/*РєСЌС€ РЅР° РѕРґРЅСѓ РјРёРЅСѓС‚Сѓ РўРЈРў РЅСѓР¶РЅРѕ РїРµСЂРµРґР°РІР°С‚СЊ РїР°СЂР°РјРµС‚СЂРѕРј*/,
                     (err, data) => {
                         if (err || !data) {
                             reject(err);
                         } else {
-                            //создаем коллекцию User из результата - пока тестовая реализация заполнения нескольких полей из any
+                            //СЃРѕР·РґР°РµРј РєРѕР»Р»РµРєС†РёСЋ User РёР· СЂРµР·СѓР»СЊС‚Р°С‚Р° - РїРѕРєР° С‚РµСЃС‚РѕРІР°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ РЅРµСЃРєРѕР»СЊРєРёС… РїРѕР»РµР№ РёР· any
                             var usersDto: User[] = ModelUserPostgre.arrayToUser(data);
                             resolve(usersDto);
                         }
@@ -120,7 +120,7 @@ export class ModelUserPostgre extends ModelBasePostgre implements IModelUser {
     }
 
     /**
-     * Вернем пользователей (сами из списк строк из Postgre создаем объекты User)
+     * Р’РµСЂРЅРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ (СЃР°РјРё РёР· СЃРїРёСЃРє СЃС‚СЂРѕРє РёР· Postgre СЃРѕР·РґР°РµРј РѕР±СЉРµРєС‚С‹ User)
      * @param arrayOfRows
      */
     static arrayToUser(arrayOfRows: Array<any>): User[] {
@@ -131,7 +131,7 @@ export class ModelUserPostgre extends ModelBasePostgre implements IModelUser {
     }
 
     /**
-     * Вернем урезанных пользователей (сами из списк строк из Postgre создаем объекты UserRestricted)
+     * Р’РµСЂРЅРµРј СѓСЂРµР·Р°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ (СЃР°РјРё РёР· СЃРїРёСЃРє СЃС‚СЂРѕРє РёР· Postgre СЃРѕР·РґР°РµРј РѕР±СЉРµРєС‚С‹ UserRestricted)
      * @param arrayOfRows
      */
     static arrayToUserRestricted(arrayOfRows: Array<any>): UserRestricted[] {
